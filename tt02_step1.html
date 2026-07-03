@@ -86,12 +86,14 @@
     .hotspot:hover { transform: scale(1.3); }
 
     .hotspot-label {
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.80);
       color: white;
       padding: 6px 12px;
       border-radius: 6px;
       font-size: 0.9rem;
-      white-space: nowrap;
+      min-width: 150px;      /* 最少這麼寬 */
+      max-width: 300px;      /* 最多這麼寬，超過就換行 */
+      white-space: normal;
       transform: translateY(-40px);
       pointer-events: none;
     }
