@@ -1,1 +1,333 @@
 
+<artifact identifier="tt02-step2" type="text/html" title="tt02_step2.html - 軸承">
+
+<!DOCTYPE html>
+
+<html lang="zh-Hant">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TT02 模型車 - 第二步：軸承</title>
+
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+
+<style>
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+
+font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+
+background: #f5f5f2;
+
+color: #222;
+
+line-height: 1.6;
+
+}
+
+header {
+
+background: linear-gradient(135deg, #7a1f2b, #a52836);
+
+color: white;
+
+padding: 20px 40px;
+
+display: flex;
+
+justify-content: space-between;
+
+align-items: center;
+
+}
+
+header .logo { font-weight: bold; font-size: 1.3rem; letter-spacing: 2px; }
+
+header h1 { font-size: 1.6rem; }
+
+.container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+
+.step-tag {
+
+display: inline-block;
+
+background: #111;
+
+color: white;
+
+padding: 8px 24px;
+
+font-size: 1.4rem;
+
+font-weight: bold;
+
+border-radius: 4px;
+
+margin-bottom: 8px;
+
+}
+
+.step-desc { font-size: 1.2rem; color: #444; margin-bottom: 20px; }
+
+model-viewer {
+
+width: 100%;
+
+height: 500px;
+
+background: linear-gradient(180deg, #ffffff, #e8e8e4);
+
+border-radius: 12px;
+
+box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+
+--poster-color: transparent;
+
+}
+
+.hotspot {
+
+background: #a52836;
+
+border: 3px solid white;
+
+border-radius: 50%;
+
+width: 24px;
+
+height: 24px;
+
+cursor: pointer;
+
+box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+
+transition: transform 0.2s;
+
+}
+
+.hotspot:hover { transform: scale(1.3); }
+
+.hotspot-label {
+
+background: rgba(0,0,0,0.80);
+
+color: white;
+
+padding: 6px 12px;
+
+border-radius: 6px;
+
+font-size: 0.9rem;
+
+min-width: 150px;
+
+max-width: 300px;
+
+white-space: normal;
+
+transform: translateY(-40px);
+
+pointer-events: none;
+
+}
+
+.controls-hint {
+
+display: flex;
+
+gap: 25px;
+
+flex-wrap: wrap;
+
+margin-top: 15px;
+
+padding: 15px 20px;
+
+background: white;
+
+border-radius: 10px;
+
+font-size: 0.95rem;
+
+color: #555;
+
+}
+
+.controls-hint div { display: flex; align-items: center; gap: 8px; }
+
+.controls-hint .icon { font-size: 1.3rem; }
+
+.info-card {
+
+margin-top: 25px;
+
+background: white;
+
+border-left: 5px solid #a52836;
+
+padding: 20px 25px;
+
+border-radius: 8px;
+
+}
+
+.info-card h3 { color: #a52836; margin-bottom: 10px; }
+
+.info-card ul { margin-left: 20px; color: #444; }
+
+.btn-row { margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+.btn {
+
+padding: 12px 24px;
+
+border: none;
+
+border-radius: 8px;
+
+font-size: 1rem;
+
+cursor: pointer;
+
+background: #a52836;
+
+color: white;
+
+transition: background 0.2s;
+
+}
+
+.btn:hover { background: #7a1f2b; }
+
+.btn.secondary { background: #555; }
+
+.btn.secondary:hover { background: #333; }
+
+.btn.next { background: #111; }
+
+.btn.next:hover { background: #000; }
+
+.btn.prev { background: #888; }
+
+.btn.prev:hover { background: #666; }
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">◆ META DOT</div>
+
+<h1>軸承 · 互動 3D 教學</h1>
+
+</header>
+
+<div class="container">
+
+<div class="step-tag">第二步</div>
+<div class="step-desc">⚙️ 軸承（Bearing）— 拖動下方模型，觀察軸承的內外圈結構</div>
+
+<!-- 3D 檢視器 -->
+<model-viewer
+  id="viewer"
+  src="Bearing.glb"
+  alt="TT02 軸承零件"
+  camera-controls
+  touch-action="pan-y"
+  auto-rotate
+  auto-rotate-delay="3000"
+  rotation-per-second="20deg"
+  shadow-intensity="1"
+  exposure="1"
+  ar
+  ar-modes="webxr scene-viewer quick-look"
+  camera-orbit="45deg 65deg 4m">
+
+  <button class="hotspot" slot="hotspot-1"
+          data-position="0 0.5 0.5"
+          data-normal="0 0 1">
+    <div class="hotspot-label">外圈（Outer Race）</div>
+  </button>
+
+  <button class="hotspot" slot="hotspot-2"
+          data-position="0 0 0.3"
+          data-normal="0 0 1">
+    <div class="hotspot-label">內圈（Inner Race）— 套入羊角軸心</div>
+  </button>
+
+  <button slot="ar-button" class="btn" style="position:absolute;bottom:16px;right:16px;">
+    📱 用手機看 AR
+  </button>
+</model-viewer>
+
+<div class="controls-hint">
+  <div><span class="icon">🖱️</span> 左鍵拖動 = 旋轉</div>
+  <div><span class="icon">🔍</span> 滾輪 = 放大／縮小</div>
+  <div><span class="icon">✋</span> 右鍵拖動 = 平移</div>
+  <div><span class="icon">📱</span> 手機：單指轉、雙指縮放</div>
+</div>
+
+<div class="info-card">
+  <h3>🔧 本步驟零件說明</h3>
+  <ul>
+    <li><b>軸承（Ball Bearing）</b>：讓輪軸能順暢轉動、降低摩擦的關鍵零件</li>
+    <li><b>規格</b>：常見為 1150 型（內徑 5mm × 外徑 11mm × 厚度 4mm）</li>
+    <li><b>組裝要點</b>：軸承需壓入羊角座孔，確認完全平貼、不歪斜</li>
+  </ul>
+</div>
+
+<div class="btn-row">
+  <button class="btn" onclick="resetView()">🔄 重置視角</button>
+  <button class="btn secondary" onclick="toggleRotate()">⏯️ 開／關 自動旋轉</button>
+  <button class="btn prev" onclick="goPrevStep()">⬅️ 上一步：羊角</button>
+  <button class="btn next" onclick="goNextStep()">➡️ 下一步：組裝</button>
+</div>
+
+</div>
+
+<script>
+
+const viewer = document.getElementById('viewer');
+
+function resetView() {
+
+viewer.cameraOrbit = '45deg 65deg 4m';
+
+viewer.fieldOfView = 'auto';
+
+}
+
+function toggleRotate() {
+
+if (viewer.hasAttribute('auto-rotate')) {
+
+viewer.removeAttribute('auto-rotate');
+
+} else {
+
+viewer.setAttribute('auto-rotate', '');
+
+}
+
+}
+
+function goPrevStep() { window.location.href = "tt02_step1.html"; }
+
+function goNextStep() { window.location.href = "tt02_step3.html"; }
+
+</script>
+
+</body>
+
+</html>
+
+</artifact>
