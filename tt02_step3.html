@@ -1,0 +1,495 @@
+<artifact identifier="tt02-step3" type="text/html" title="tt02_step3.html - 組裝">
+
+<!DOCTYPE html>
+
+<html lang="zh-Hant">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TT02 模型車 - 第三步：組裝</title>
+
+<style>
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+
+font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+
+background: #f5f5f2;
+
+color: #222;
+
+line-height: 1.6;
+
+}
+
+header {
+
+background: linear-gradient(135deg, #7a1f2b, #a52836);
+
+color: white;
+
+padding: 20px 40px;
+
+display: flex;
+
+justify-content: space-between;
+
+align-items: center;
+
+}
+
+header .logo { font-weight: bold; font-size: 1.3rem; letter-spacing: 2px; }
+
+header h1 { font-size: 1.6rem; }
+
+.container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+
+.step-tag {
+
+display: inline-block;
+
+background: #111;
+
+color: white;
+
+padding: 8px 24px;
+
+font-size: 1.4rem;
+
+font-weight: bold;
+
+border-radius: 4px;
+
+margin-bottom: 8px;
+
+}
+
+.step-desc { font-size: 1.2rem; color: #444; margin-bottom: 20px; }
+
+/* 3D 舞台 */
+
+#stage {
+
+position: relative;
+
+width: 100%;
+
+height: 500px;
+
+background: linear-gradient(180deg, #ffffff, #e8e8e4);
+
+border-radius: 12px;
+
+box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+
+overflow: hidden;
+
+}
+
+#stage canvas { display: block; }
+
+#loading {
+
+position: absolute; inset: 0;
+
+display: flex; justify-content: center; align-items: center;
+
+font-size: 1.2rem; color: #a52836;
+
+background: #f0f0ec; z-index: 5;
+
+}
+
+/* 組裝進度滑桿 */
+
+.assembly-control {
+
+position: absolute;
+
+bottom: 20px; left: 50%;
+
+transform: translateX(-50%);
+
+background: rgba(255,255,255,0.95);
+
+padding: 12px 20px;
+
+border-radius: 12px;
+
+box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+
+display: flex;
+
+align-items: center;
+
+gap: 12px;
+
+z-index: 6;
+
+width: 80%;
+
+max-width: 400px;
+
+}
+
+.assembly-control label { font-size: 0.85rem; color: #555; white-space: nowrap; }
+
+.assembly-control input[type=range] { flex: 1; accent-color: #a52836; height: 6px; }
+
+.controls-hint {
+
+display: flex;
+
+gap: 25px;
+
+flex-wrap: wrap;
+
+margin-top: 15px;
+
+padding: 15px 20px;
+
+background: white;
+
+border-radius: 10px;
+
+font-size: 0.95rem;
+
+color: #555;
+
+}
+
+.controls-hint div { display: flex; align-items: center; gap: 8px; }
+
+.controls-hint .icon { font-size: 1.3rem; }
+
+.info-card {
+
+margin-top: 25px;
+
+background: white;
+
+border-left: 5px solid #a52836;
+
+padding: 20px 25px;
+
+border-radius: 8px;
+
+}
+
+.info-card h3 { color: #a52836; margin-bottom: 10px; }
+
+.info-card ul { margin-left: 20px; color: #444; }
+
+.btn-row { margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+.btn {
+
+padding: 12px 24px;
+
+border: none;
+
+border-radius: 8px;
+
+font-size: 1rem;
+
+cursor: pointer;
+
+background: #a52836;
+
+color: white;
+
+transition: background 0.2s;
+
+}
+
+.btn:hover { background: #7a1f2b; }
+
+.btn.secondary { background: #555; }
+
+.btn.secondary:hover { background: #333; }
+
+.btn.prev { background: #888; }
+
+.btn.prev:hover { background: #666; }
+
+.btn.play { background: #111; }
+
+.btn.play:hover { background: #000; }
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">◆ META DOT</div>
+
+<h1>零件組裝 · 互動 3D 教學</h1>
+
+</header>
+
+<div class="container">
+
+<div class="step-tag">第三步</div>
+<div class="step-desc">🏁 組裝 — 拖動滑桿或按「播放組裝」，觀看軸承壓入羊角的過程</div>
+
+<!-- 3D 舞台 -->
+<div id="stage">
+  <div id="loading">載入模型中… ⏳</div>
+  <div class="assembly-control">
+    <label>分解</label>
+    <input type="range" id="slider" min="0" max="100" value="0">
+    <label>組合</label>
+  </div>
+</div>
+
+<div class="controls-hint">
+  <div><span class="icon">🖱️</span> 左鍵拖動 = 旋轉</div>
+  <div><span class="icon">🔍</span> 滾輪 = 放大／縮小</div>
+  <div><span class="icon">✋</span> 右鍵拖動 = 平移</div>
+  <div><span class="icon">🎚️</span> 滑桿 = 控制組裝進度</div>
+</div>
+
+<div class="info-card">
+  <h3>🔧 組裝步驟說明</h3>
+  <ul>
+    <li><b>步驟 1</b>：將<b>軸承</b>對準<b>羊角</b>的軸心孔位</li>
+    <li><b>步驟 2</b>：沿軸線方向平行壓入，切勿歪斜</li>
+    <li><b>步驟 3</b>：確認軸承完全平貼羊角座 ✔ ASSEMBLED</li>
+    <li>💡 拖動滑桿可反覆檢視「分解 ↔ 組合」的相對位置</li>
+  </ul>
+</div>
+
+<div class="btn-row">
+  <button class="btn play" onclick="playAssemble()">▶️ 播放組裝</button>
+  <button class="btn" onclick="resetView()">🔄 重置視角</button>
+  <button class="btn prev" onclick="goPrevStep()">⬅️ 上一步：軸承</button>
+</div>
+
+</div>
+
+<!-- Three.js -->
+
+<script type="importmap">
+
+{
+
+"imports": {
+
+"three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+
+"three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+
+}
+
+}
+
+</script>
+
+<script type="module">
+
+import * as THREE from 'three';
+
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const stage = document.getElementById('stage');
+
+const W = () => stage.clientWidth;
+
+const H = () => stage.clientHeight;
+
+const scene = new THREE.Scene();
+
+scene.background = new THREE.Color(0xf0f0ec);
+
+const camera = new THREE.PerspectiveCamera(45, W()/H(), 0.01, 1000);
+
+camera.position.set(3, 2, 5);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+renderer.setSize(W(), H());
+
+renderer.setPixelRatio(window.devicePixelRatio);
+
+stage.appendChild(renderer.domElement);
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+
+const dir = new THREE.DirectionalLight(0xffffff, 1.2);
+
+dir.position.set(5, 10, 7); scene.add(dir);
+
+const dir2 = new THREE.DirectionalLight(0xffffff, 0.4);
+
+dir2.position.set(-5, -3, -5); scene.add(dir2);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+
+controls.enableDamping = true;
+
+controls.dampingFactor = 0.08;
+
+const loader = new GLTFLoader();
+
+let partA, partB;
+
+/* 🔧 分解 / 組合位置（依你的模型調整）*/
+
+const A_apart = new THREE.Vector3(-1.5, 0, 0); // 羊角 分開位置
+
+const B_apart = new THREE.Vector3( 1.5, 0, 0); // 軸承 分開位置
+
+const A_together = new THREE.Vector3(-0.3, 0, 0); // 羊角 組合位置
+
+const B_together = new THREE.Vector3( 0.2, 0, 0); // 軸承 組合位置
+
+let loadedCount = 0;
+
+function checkLoaded() {
+
+loadedCount++;
+
+if (loadedCount === 2) {
+
+document.getElementById('loading').style.display = 'none';
+
+fitCameraToScene();
+
+updatePositions(0);
+
+}
+
+}
+
+// 🔧 換成你的檔名
+
+loader.load('FrontUpright.glb', (gltf) => {
+
+partA = gltf.scene; scene.add(partA); checkLoaded();
+
+}, undefined, (err) => {
+
+console.error('FrontUpright 載入失敗', err);
+
+document.getElementById('loading').innerHTML = '❌ FrontUpright.glb 載入失敗';
+
+});
+
+loader.load('Bearing.glb', (gltf) => {
+
+partB = gltf.scene; scene.add(partB); checkLoaded();
+
+}, undefined, (err) => {
+
+console.error('Bearing 載入失敗', err);
+
+document.getElementById('loading').innerHTML = '❌ Bearing.glb 載入失敗';
+
+});
+
+function updatePositions(t) {
+
+if (partA) partA.position.lerpVectors(A_apart, A_together, t);
+
+if (partB) partB.position.lerpVectors(B_apart, B_together, t);
+
+}
+
+/* 自動調整相機距離，讓兩零件都在畫面內 */
+
+function fitCameraToScene() {
+
+const box = new THREE.Box3();
+
+if (partA) box.expandByObject(partA);
+
+if (partB) box.expandByObject(partB);
+
+const size = box.getSize(new THREE.Vector3());
+
+const center = box.getCenter(new THREE.Vector3());
+
+const maxDim = Math.max(size.x, size.y, size.z) + 3; // +3 預留分解空間
+
+const dist = maxDim / (2 * Math.tan(Math.PI * camera.fov / 360));
+
+camera.position.set(center.x + dist*0.6, center.y + dist*0.4, center.z + dist);
+
+controls.target.copy(center);
+
+controls.update();
+
+}
+
+const slider = document.getElementById('slider');
+
+slider.addEventListener('input', () => updatePositions(slider.value / 100));
+
+window.playAssemble = function () {
+
+slider.value = 0; updatePositions(0);
+
+const duration = 1500, t0 = performance.now();
+
+function anim(now) {
+
+let p = Math.min((now - t0) / duration, 1);
+
+const eased = 1 - Math.pow(1 - p, 3);
+
+slider.value = eased * 100;
+
+updatePositions(eased);
+
+if (p < 1) requestAnimationFrame(anim);
+
+}
+
+requestAnimationFrame(anim);
+
+};
+
+window.resetView = function () { fitCameraToScene(); };
+
+window.goPrevStep = function () { window.location.href = "tt02_step2.html"; };
+
+function loop() {
+
+requestAnimationFrame(loop);
+
+controls.update();
+
+renderer.render(scene, camera);
+
+}
+
+loop();
+
+window.addEventListener('resize', () => {
+
+camera.aspect = W()/H();
+
+camera.updateProjectionMatrix();
+
+renderer.setSize(W(), H());
+
+});
+
+</script>
+
+</body>
+
+</html>
+
+</artifact>
