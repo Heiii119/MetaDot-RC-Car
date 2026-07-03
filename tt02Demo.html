@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TT02 模型車 - 車頭羊角互動 3D 教學</title>
+
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: #f5f5f2;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #7a1f2b, #a52836);
+      color: white;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    header .logo {
+      font-weight: bold;
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+    }
+
+    header h1 { font-size: 1.6rem; }
+
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .step-tag {
+      display: inline-block;
+      background: #111;
+      color: white;
+      padding: 8px 24px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    .step-desc {
+      font-size: 1.15rem;
+      color: #444;
+      margin-bottom: 20px;
+    }
+
+    model-viewer {
+      width: 100%;
+      height: 520px;
+      background: linear-gradient(180deg, #ffffff, #e8e8e4);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      --poster-color: transparent;
+    }
+
+    .hotspot {
+      background: #a52836;
+      border: 3px solid white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      transition: transform 0.2s;
+    }
+
+    .hotspot:hover { transform: scale(1.25); }
+
+    .hotspot-label {
+      background: rgba(0,0,0,0.85);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      transform: translateY(-40px);
+      pointer-events: none;
+    }
+
+    .controls-hint {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+      padding: 15px 20px;
+      background: white;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    .controls-hint div {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .controls-hint .icon { font-size: 1.2rem; }
+
+    .info-card {
+      margin-top: 25px;
+      background: white;
+      border-left: 5px solid #a52836;
+      padding: 20px 25px;
+      border-radius: 8px;
+    }
+
+    .info-card h3 {
+      color: #a52836;
+      margin-bottom: 10px;
+    }
+
+    .info-card ul {
+      margin-left: 20px;
+      color: #444;
+    }
+
+    .btn-row {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #a52836;
+      color: white;
+      transition: background 0.2s;
+    }
+
+    .btn:hover { background: #7a1f2b; }
+
+    .btn.secondary { background: #555; }
+    .btn.secondary:hover { background: #333; }
+
+    .btn.dark { background: #111; }
+    .btn.dark:hover { background: #000; }
+
+    .step-nav {
+      margin-top: 18px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      model-viewer {
+        height: 420px;
+      }
+
+      header {
+        padding: 18px 20px;
+      }
+
+      header h1 {
+        font-size: 1.3rem;
+      }
+
+      .step-desc {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">◆ META DOT</div>
+  <h1 id="pageTitle">車頭羊角 · 互動 3D 教學</h1>
+</header>
+
+<div class="container">
+  <div class="step-tag" id="stepTag">第三步</div>
+  <div class="step-desc" id="stepDesc">
+    🔍 先觀察分離零件位置，拖動模型，從各角度看清楚零件的方向與裝配次序。
+  </div>
+
+  <model-viewer
+    id="viewer"
+    src="FrontUpright_Exploded.glb"
+    alt="TT02 車頭羊角分解零件"
+    camera-controls
+    touch-action="pan-y"
+    auto-rotate
+    auto-rotate-delay="3000"
+    rotation-per-second="20deg"
+    shadow-intensity="1"
+    exposure="1"
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    camera-orbit="45deg 65deg 4m"
+    min-camera-orbit="auto auto 2m"
+    max-camera-orbit="auto auto 8m">
+
+    <!-- Step 3 hotspots -->
+    <button class="hotspot step3-hotspot" slot="hotspot-1"
+            data-position="0 0.1 0.2"
+            data-normal="0 0 1">
+      <div class="hotspot-label">軸承 / 套環位置</div>
+    </button>
+
+    <button class="hotspot step3-hotspot" slot="hotspot-2"
+            data-position="-0.3 0.0 0.25"
+            data-normal="0 0 1">
+      <div class="hotspot-label">羊角本體</div>
+    </button>
+
+    <button class="hotspot step3-hotspot" slot="hotspot-3"
+            data-position="0.35 0.0 0.2"
+            data-normal="0 0 1">
+      <div class="hotspot-label">插入軸方向</div>
+    </button>
+
+    <!-- Step 4 hotspots -->
+    <button class="hotspot step4-hotspot" slot="hotspot-4"
+            data-position="0.05 0.02 0.18"
+            data-normal="0 0 1"
+            style="display:none;">
+      <div class="hotspot-label">已裝入位置</div>
+    </button>
+
+    <button class="hotspot step4-hotspot" slot="hotspot-5"
+            data-position="-0.15 0.0 0.2"
+            data-normal="0 0 1"
+            style="display:none;">
+      <div class="hotspot-label">檢查對齊</div>
+    </button>
+
+    <button slot="ar-button" class="btn" style="position:absolute;bottom:16px;right:16px;">
+      📱 用手機看 AR
+    </button>
+  </model-viewer>
+
+  <div class="controls-hint">
+    <div><span class="icon">🖱️</span> 左鍵拖動 = 旋轉</div>
+    <div><span class="icon">🔍</span> 滾輪 = 放大 / 縮小</div>
+    <div><span class="icon">✋</span> 右鍵拖動 = 平移</div>
+    <div><span class="icon">📱</span> 手機：單指轉、雙指縮放</div>
+  </div>
+
+  <div class="info-card">
+    <h3 id="infoTitle">🔧 本步驟零件說明</h3>
+    <ul id="infoList">
+      <li><b>羊角本體</b>：前輪轉向的重要結構零件</li>
+      <li><b>插入軸 / 接合件</b>：依照圖片方向插入羊角本體</li>
+      <li><b>軸承 / 套環</b>：先對準中心孔位，再慢慢裝入</li>
+      <li><b>學習重點</b>：先辨認方向，再進行組裝</li>
+    </ul>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn" onclick="resetView()">🔄 重置視角</button>
+    <button class="btn secondary" onclick="toggleRotate()">⏯️ 開 / 關 自動旋轉</button>
+    <button class="btn dark" onclick="showExploded()">🧩 看分解零件</button>
+    <button class="btn" onclick="showAssembled()">🛠️ 下一步：組裝零件</button>
+  </div>
+
+  <div class="step-nav">
+    <button class="btn secondary" onclick="showExploded()">← 回到觀察零件</button>
+    <button class="btn" onclick="showAssembled()">下一步：把零件裝起來 →</button>
+  </div>
+</div>
+
+<script>
+  const viewer = document.getElementById('viewer');
+  const pageTitle = document.getElementById('pageTitle');
+  const stepTag = document.getElementById('stepTag');
+  const stepDesc = document.getElementById('stepDesc');
+  const infoTitle = document.getElementById('infoTitle');
+  const infoList = document.getElementById('infoList');
+
+  const explodedModel = "FrontUpright.glb";
+  const assembledModel = "C.glb";
+
+  function showExploded() {
+    viewer.src = explodedModel;
+    viewer.alt = "TT02 車頭羊角分解零件";
+    stepTag.textContent = "第三步";
+    pageTitle.textContent = "車頭羊角 · 互動 3D 教學";
+    stepDesc.textContent = "🔍 先觀察分離零件位置，拖動模型，從各角度看清楚零件的方向與裝配次序。";
+
+    infoTitle.textContent = "🔧 本步驟零件說明";
+    infoList.innerHTML = `
+      <li><b>羊角本體</b>：前輪轉向的重要結構零件</li>
+      <li><b>插入軸 / 接合件</b>：依照圖片方向插入羊角本體</li>
+      <li><b>軸承 / 套環</b>：先對準中心孔位，再慢慢裝入</li>
+      <li><b>學習重點</b>：先辨認方向，再進行組裝</li>
+    `;
+
+    document.querySelectorAll('.step3-hotspot').forEach(h => h.style.display = 'block');
+    document.querySelectorAll('.step4-hotspot').forEach(h => h.style.display = 'none');
+
+    viewer.cameraOrbit = '45deg 65deg 4m';
+  }
+
+  function showAssembled() {
+    viewer.src = assembledModel;
+    viewer.alt = "TT02 車頭羊角已組裝模型";
+    stepTag.textContent = "第四步";
+    pageTitle.textContent = "車頭羊角 · 組裝完成 3D 教學";
+    stepDesc.textContent = "🛠️ 現在觀察零件組裝完成後的位置，確認軸心、套環與羊角本體是否正確對齊。";
+
+    infoTitle.textContent = "✅ 下一步組裝重點";
+    infoList.innerHTML = `
+      <li><b>組裝完成狀態</b>：零件應完全插入正確位置</li>
+      <li><b>對齊檢查</b>：中心軸應與孔位同心，不可歪斜</li>
+      <li><b>學生任務</b>：旋轉模型，從正面、側面、背面檢查是否裝反</li>
+      <li><b>老師提示</b>：可要求學生口頭說出「先對孔，再插入」的步驟</li>
+    `;
+
+    document.querySelectorAll('.step3-hotspot').forEach(h => h.style.display = 'none');
+    document.querySelectorAll('.step4-hotspot').forEach(h => h.style.display = 'block');
+
+    viewer.cameraOrbit = '30deg 70deg 3.2m';
+  }
+
+  function resetView() {
+    if (stepTag.textContent === "第四步") {
+      viewer.cameraOrbit = '30deg 70deg 3.2m';
+    } else {
+      viewer.cameraOrbit = '45deg 65deg 4m';
+    }
+    viewer.fieldOfView = 'auto';
+  }
+
+  function toggleRotate() {
+    if (viewer.hasAttribute('auto-rotate')) {
+      viewer.removeAttribute('auto-rotate');
+    } else {
+      viewer.setAttribute('auto-rotate', '');
+    }
+  }
+</script>
+
+</body>
+</html>
