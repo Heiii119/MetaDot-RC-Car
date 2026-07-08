@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Newton First Law Surface Game</title>
+  <style>
+    :root {
+      --bg1: #edf8ff;
+      --bg2: #f8fcff;
+      --blue: #0f4f80;
+      --blue2: #2b84c7;
+      --dark: #18354d;
+      --card: rgba(255,255,255,0.92);
+      --shadow: 0 10px 26px rgba(0,0,0,0.12);
+      --ice: #dff3ff;
+      --rough: #d8d2c4;
+      --ok: #2a9d8f;
+      --red: #e63946;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--dark);
+      background:
+        radial-gradient(circle at top right, rgba(43,132,199,0.10), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(15,79,128,0.08), transparent 18%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f4f80, #2b84c7);
+      color: white;
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .logo-img {
+      height: 40px;
+      width: auto;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+    }
+
+    .hero p {
+      margin: 6px 0;
+      line-height: 1.4;
+    }
+
+    .cn {
+      font-weight: 700;
+      opacity: 0.96;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .stageCard, .panel {
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      backdrop-filter: blur(5px);
+    }
+
+    .stageCard h2, .panel h2 {
+      margin-top: 0;
+      color: var(--blue);
+    }
+
+    .stage {
+      position: relative;
+      width: 100%;
+      height: 460px;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 2px solid rgba(15,79,128,0.12);
+      background: linear-gradient(180deg, #cbeefe 0 16%, #edf9ff 16% 100%);
+    }
+
+    .marker {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+      z-index: 5;
+    }
+
+    .badge {
+      background: rgba(255,255,255,0.94);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    .rinkTitle {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      z-index: 3;
+      background: rgba(255,255,255,0.9);
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+    }
+
+    .arena {
+      position: absolute;
+      left: 30px;
+      right: 30px;
+      top: 78px;
+      bottom: 50px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 5px solid #7aa4bf;
+      background: linear-gradient(180deg, #fafeff, #eaf7ff);
+    }
+
+    .zone {
+      position: absolute;
+      inset: 0;
+    }
+
+    .zone.ice {
+      background: linear-gradient(180deg, #eefbff, var(--ice));
+    }
+
+    .zone.rough {
+      background: linear-gradient(180deg, #e7e0d3, var(--rough));
+    }
+
+    .arenaLabel {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.92);
+      font-weight: 700;
+      color: var(--dark);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+      z-index: 3;
+    }
+
+    .puck {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #818181, #3b3b3b 70%);
+      border: 4px solid #1d2833;
+      box-shadow: 0 8px 12px rgba(0,0,0,0.16);
+      z-index: 4;
+    }
+
+    .arrow {
+      position: absolute;
+      height: 8px;
+      background: linear-gradient(90deg, #53a7e3, #1f6dac);
+      border-radius: 999px;
+      transform-origin: left center;
+      z-index: 2;
+    }
+
+    .arrow::after {
+      content: "";
+      position: absolute;
+      right: -14px;
+      top: -6px;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-left: 16px solid #1f6dac;
+    }
+
+    .arrow.force {
+      height: 10px;
+      background: linear-gradient(90deg, #ff7b84, var(--red));
+      z-index: 5;
+    }
+
+    .arrow.force::after {
+      border-left-color: var(--red);
+    }
+
+.arrow.friction {
+      height: 10px;
+      background: linear-gradient(90deg, #d7dde2, #8b959e);
+      z-index: 6;
+    }
+
+    .arrow.friction::after {
+      border-left-color: #8b959e;
+    }
+
+    .forceLabel {
+      position: absolute;
+      color: var(--red);
+      font-weight: 900;
+      font-size: 42px;
+      line-height: 1;
+      z-index: 6;
+      display: none;
+      text-shadow: 0 2px 4px rgba(255,255,255,0.85);
+      pointer-events: none;
+    }
+
+    .frictionLabel {
+      position: absolute;
+      color: #5f6870;
+      font-weight: 900;
+      font-size: 20px;
+      line-height: 1;
+      z-index: 7;
+      display: none;
+      background: rgba(255,255,255,0.92);
+      padding: 4px 8px;
+      border-radius: 999px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.10);
+      pointer-events: none;
+    }
+
+    .trailDot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(43,132,199,0.28);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .controls {
+      display: grid;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .row {
+      display: grid;
+      gap: 6px;
+    }
+
+    .surfaceRow,
+    .pillRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: white;
+      background: var(--blue2);
+      box-shadow: 0 6px 14px rgba(43,132,199,0.22);
+    }
+
+    button.secondary {
+      background: #647889;
+      box-shadow: none;
+    }
+
+    button.good {
+      background: var(--ok);
+    }
+
+    button.launch {
+      background: var(--red);
+      box-shadow: 0 6px 14px rgba(230,57,70,0.28);
+    }
+
+    .statusBox {
+      background: #eef7ff;
+      border-left: 5px solid var(--blue2);
+      border-radius: 12px;
+      padding: 10px 12px;
+      line-height: 1.5;
+    }
+
+    .cards {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .mini {
+      background: white;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      min-height: 100px;
+    }
+
+    .mini h3 {
+      margin: 0 0 8px;
+      color: var(--blue);
+      font-size: 1rem;
+    }
+
+    .quizBox {
+      margin-top: 16px;
+      background: #fffdf3;
+      border: 2px dashed #e5bc49;
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .quizChoices {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    button.choice {
+      text-align: left;
+      background: white;
+      color: var(--dark);
+      border: 2px solid #d8e4ee;
+      box-shadow: none;
+    }
+
+    button.choice.correct {
+      background: #eefaf6;
+      border-color: var(--ok);
+    }
+
+    button.choice.wrong {
+      background: #fff1f3;
+      border-color: #e63946;
+    }
+
+    .tiny {
+      font-size: 0.92rem;
+      color: #506779;
+      line-height: 1.42;
+    }
+
+    .meterBar {
+      margin-top: 8px;
+      height: 16px;
+      background: #dfeaf3;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    #meterFill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg,#4caf50,#ffb703,#e63946);
+    }
+
+    @media (max-width: 920px) {
+      .cards { grid-template-columns: 1fr; }
+      .stage { height: 500px; }
+      .arena { left: 16px; right: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-top">
+        <img src="img/logo.png" alt="Meta Dot logo" class="logo-img" />
+      </div>
+      <h1>🥌 Newton’s First Law</h1>
+      <p class="cn">牛頓第一定律</p>
+      <p>Choose one surface. Push the puck. Watch what changes its motion.</p>
+    </section>
+
+    <div class="grid">
+      <section class="stageCard">
+        <h2>Scene</h2>
+        <div class="stage">
+          <div class="rinkTitle">See what changes motion</div>
+          <div class="marker">
+            <div class="badge" id="speedBadge">Speed: 0</div>
+            <div class="badge" id="forceBadge">Force: 0</div>
+          </div>
+
+          <div class="arena" id="arena">
+            <div class="zone ice" id="surfaceZone"></div>
+            <div class="arenaLabel" id="surfaceLabel">Smooth</div>
+            <div class="arrow" id="velocityArrow"></div>
+            <div class="arrow force" id="forceArrow"></div>
+            <div class="arrow friction" id="frictionArrow"></div>
+            <div class="forceLabel" id="forceLabel">F</div>
+            <div class="frictionLabel" id="frictionLabel">friction</div>
+            <div class="puck" id="puck"></div>
+          </div>
+        </div>
+
+        <aside class="panel" style="margin-top:16px;">
+          <h2>Controls</h2>
+          <div class="controls">
+            <div class="row">
+              <label>Surface</label>
+              <div class="surfaceRow">
+                <button id="surfaceSmooth">Smooth</button>
+                <button id="surfaceRough" class="secondary">Rough</button>
+              </div>
+            </div>
+
+            <div class="pillRow">
+              <button id="launchBtn" class="launch">Launch</button>
+              <button id="predictBtn" class="good">Predict</button>
+              <button id="resetBtn" class="secondary">Reset</button>
+            </div>
+
+            <div class="statusBox" id="explainBox">The puck is still.</div>
+
+            <div>
+              <strong>Speed</strong>
+              <div class="meterBar">
+                <div id="meterFill"></div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="stageCard">
+        <h2>Key Idea</h2>
+        <div class="cards">
+          <div class="mini">
+            <h3>Rest</h3>
+            <div>No push = no motion.</div>
+          </div>
+          <div class="mini">
+            <h3>Smooth</h3>
+            <div>No friction = puck keeps moving infinity</div>
+          </div>
+          <div class="mini">
+            <h3>Rough</h3>
+            <div>More friction = shorter motion.</div>
+          </div>
+        </div>
+
+        <div class="quizBox">
+          <strong>Quick Check 🎯</strong>
+          <div id="quizQuestion">Why does the puck stop sooner on a rough surface?</div>
+          <div class="quizChoices">
+            <button class="choice" data-correct="true">More friction</button>
+            <button class="choice" data-correct="false">It wants to stop</button>
+            <button class="choice" data-correct="false">Rough ground adds speed</button>
+          </div>
+          <div class="tiny" id="quizFeedback">Choose one.</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const surfaceSmooth = document.getElementById('surfaceSmooth');
+      const surfaceRough = document.getElementById('surfaceRough');
+      const launchBtn = document.getElementById('launchBtn');
+      const predictBtn = document.getElementById('predictBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const explainBox = document.getElementById('explainBox');
+      const speedBadge = document.getElementById('speedBadge');
+      const forceBadge = document.getElementById('forceBadge');
+      const meterFill = document.getElementById('meterFill');
+      const puck = document.getElementById('puck');
+      const arena = document.getElementById('arena');
+      const surfaceZone = document.getElementById('surfaceZone');
+      const surfaceLabel = document.getElementById('surfaceLabel');
+      const velocityArrow = document.getElementById('velocityArrow');
+      const forceArrow = document.getElementById('forceArrow');
+      const frictionArrow = document.getElementById('frictionArrow');
+      const forceLabel = document.getElementById('forceLabel');
+      const frictionLabel = document.getElementById('frictionLabel');
+      const quizChoices = Array.from(document.querySelectorAll('.choice'));
+      const quizFeedback = document.getElementById('quizFeedback');
+
+      let x = 120;
+      let y = 160;
+      let vx = 0;
+      let vy = 0;
+      let anim = null;
+      let last = 0;
+      let predictionMode = false;
+      let trailCooldown = 0;
+      let startSurface = 'smooth';
+      let showLaunchForce = false;
+      let launchForceTimer = null;
+      function clamp(v, min, max) {
+        return Math.max(min, Math.min(max, v));
+      }
+
+      function setExplanation(text) {
+        explainBox.textContent = text;
+      }
+
+      function clearTrail() {
+        arena.querySelectorAll('.trailDot').forEach(function (dot) {
+          dot.remove();
+        });
+      }
+
+      function addTrail() {
+        const dot = document.createElement('div');
+        dot.className = 'trailDot';
+        dot.style.left = (x + 17) + 'px';
+        dot.style.top = (y + 17) + 'px';
+        arena.appendChild(dot);
+        const dots = arena.querySelectorAll('.trailDot');
+        if (dots.length > 45) {
+          dots[0].remove();
+        }
+      }
+
+      function updateSurfaceButtons() {
+        surfaceSmooth.className = startSurface === 'smooth' ? '' : 'secondary';
+        surfaceRough.className = startSurface === 'rough' ? '' : 'secondary';
+      }
+
+      function updateSurfaceView() {
+        surfaceZone.className = startSurface === 'smooth' ? 'zone ice' : 'zone rough';
+        surfaceLabel.textContent = startSurface === 'smooth' ? 'Smooth' : 'Rough';
+      }
+
+      function updateForceArrowLabel() {
+        forceArrow.style.display = showLaunchForce ? 'block' : 'none';
+        forceLabel.style.display = showLaunchForce ? 'block' : 'none';
+        forceLabel.style.left = (x + 56) + 'px';
+        forceLabel.style.top = (y - 112) + 'px';
+      }
+
+      function render() {
+        puck.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+        const speed = Math.sqrt(vx * vx + vy * vy);
+        speedBadge.textContent = 'Speed: ' + speed.toFixed(1);
+        meterFill.style.width = clamp(speed, 0, 100) + '%';
+
+        let forceText = 'Force: 0';
+        if (speed > 0.1 && startSurface === 'rough') {
+          forceText = 'Force: friction';
+        }
+        if (showLaunchForce) {
+          forceText = 'Force: push';
+        }
+        forceBadge.textContent = forceText;
+
+        const arrowLength = clamp(speed * 2.2, 20, 130);
+        const arrowAngle = Math.atan2(vy, vx) * 180 / Math.PI;
+        velocityArrow.style.width = arrowLength + 'px';
+        velocityArrow.style.left = (x + 21) + 'px';
+        velocityArrow.style.top = (y + 21) + 'px';
+        velocityArrow.style.transform = 'rotate(' + arrowAngle + 'deg)';
+        velocityArrow.style.opacity = speed > 0.1 ? '1' : '0';
+
+        const frictionActive = startSurface === 'rough' && speed > 0.1;
+        const frictionArrowLength = frictionActive ? clamp(speed * 1.4, 36, 64) : 0;
+        frictionArrow.style.width = frictionArrowLength + 'px';
+        frictionArrow.style.left = (x - 10) + 'px';
+        frictionArrow.style.top = (y + 16) + 'px';
+        frictionArrow.style.transform = 'rotate(180deg)';
+        frictionArrow.style.opacity = frictionArrowLength > 0 ? '1' : '0';
+
+        frictionLabel.style.display = frictionActive ? 'block' : 'none';
+        frictionLabel.style.left = (x - 92) + 'px';
+        frictionLabel.style.top = (y - 8) + 'px';
+
+        const forceArrowLength = showLaunchForce ? 86 : 0;
+        forceArrow.style.width = forceArrowLength + 'px';
+        forceArrow.style.left = (x + 21) + 'px';
+        forceArrow.style.top = (y - 44) + 'px';
+        forceArrow.style.transform = 'rotate(0deg)';
+        forceArrow.style.opacity = forceArrowLength > 0 ? '1' : '0';
+        updateForceArrowLabel();
+      }
+
+      function resetScene() {
+        cancelAnimationFrame(anim);
+        anim = null;
+        last = 0;
+        x = 70;
+        y = 160;
+        vx = 0;
+        vy = 0;
+        predictionMode = false;
+        trailCooldown = 0;
+        showLaunchForce = false;
+        if (launchForceTimer) {
+          clearTimeout(launchForceTimer);
+          launchForceTimer = null;
+        }
+        clearTrail();
+        setExplanation('The puck is still.');
+        render();
+      }
+
+      function launchPuck() {
+        resetScene();
+        vx = 18;
+        vy = 0;
+        predictionMode = false;
+        showLaunchForce = true;
+        setExplanation('The push gives a net force to start the motion.');
+        render();
+        launchForceTimer = setTimeout(function () {
+          showLaunchForce = false;
+          render();
+        }, 800);
+        if (!anim) {
+          anim = requestAnimationFrame(step);
+        }
+      }
+
+      function showPrediction() {
+        predictionMode = true;
+        setExplanation('Predict: Which surface will let it move farther?');
+        render();
+      }
+
+      function step(ts) {
+        if (!last) {
+          last = ts;
+        }
+        const dt = Math.min((ts - last) / 16.67, 1.2);
+        last = ts;
+
+        const speed = Math.sqrt(vx * vx + vy * vy);
+        const inSmooth = startSurface === 'smooth';
+
+        if (!inSmooth && speed <= 0.06) {
+          vx = 0;
+          vy = 0;
+          anim = null;
+          last = 0;
+          setExplanation('It stops sooner on the rough surface because friction acts backward.');
+          render();
+          return;
+        }
+
+        const frictionLevel = inSmooth ? 0 : 0.022;
+        const newSpeed = inSmooth
+          ? speed
+          : Math.max(0, speed - frictionLevel * speed * dt - 0.04 * dt);
+        const scale = speed === 0 ? 0 : newSpeed / speed;
+        vx *= scale;
+        vy *= scale;
+
+        x += vx * dt;
+        y += vy * dt;
+
+        if (!inSmooth) {
+          const maxX = arena.clientWidth - 52;
+          if (x >= maxX) {
+            x = maxX;
+            vx = 0;
+            vy = 0;
+            anim = null;
+            last = 0;
+            setExplanation('It stops sooner on the rough surface because friction acts backward.');
+            render();
+            return;
+          }
+        } else if (x > arena.clientWidth + 80) {
+          anim = null;
+          last = 0;
+          setExplanation('No friction = puck keeps moving infinity');
+          render();
+          return;
+        }
+
+        trailCooldown += dt;
+        if (trailCooldown > 3.6) {
+          addTrail();
+          trailCooldown = 0;
+        }
+
+        render();
+        anim = requestAnimationFrame(step);
+      }
+
+      surfaceSmooth.addEventListener('click', function () {
+        startSurface = 'smooth';
+        updateSurfaceButtons();
+        updateSurfaceView();
+        resetScene();
+        setExplanation('Smooth surface: no friction.');
+      });
+
+      surfaceRough.addEventListener('click', function () {
+        startSurface = 'rough';
+        updateSurfaceButtons();
+        updateSurfaceView();
+        resetScene();
+        setExplanation('Rough surface: more friction.');
+      });
+
+      launchBtn.addEventListener('click', launchPuck);
+      predictBtn.addEventListener('click', showPrediction);
+      resetBtn.addEventListener('click', resetScene);
+
+      quizChoices.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          quizChoices.forEach(function (b) {
+            b.classList.remove('correct', 'wrong');
+          });
+          const correct = btn.getAttribute('data-correct') === 'true';
+          if (correct) {
+            btn.classList.add('correct');
+            quizFeedback.textContent = 'Correct! More friction slows it down.';
+          } else {
+            btn.classList.add('wrong');
+            quizFeedback.textContent = 'Try again.';
+          }
+        });
+      });
+
+      updateSurfaceButtons();
+      updateSurfaceView();
+      resetScene();
+    });
+  </script>
+</body>
+</html>
