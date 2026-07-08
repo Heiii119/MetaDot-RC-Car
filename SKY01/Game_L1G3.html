@@ -3,107 +3,231 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Simple Tire Friction Car Turn Demo</title>
+  <title>Tire Friction & Turning | Meta Dot STEAM</title>
   <style>
     :root {
-      --bg: #eef4ff;
-      --panel: rgba(255,255,255,0.94);
-      --ink: #183153;
-      --muted: #5b6b82;
-      --accent: #2f80ed;
-      --good: #27ae60;
-      --warn: #e67e22;
-      --bad: #e74c3c;
-      --shadow: 0 10px 30px rgba(24,49,83,0.12);
+      --bg: #eef4fb;
+      --panel: #ffffff;
+      --panel-2: #f2f7fd;
+      --text: #0f2847;
+      --muted: #5f7993;
+      --navy: #12345a;
+      --navy-deep: #0f2847;
+      --accent: #1e88e5;
+      --accent-2: #29c5ff;
+      --cyan: #35d0e8;
+      --purple: #7b3fe4;
+      --good: #12b673;
+      --warn: #e6913c;
+      --bad: #ef5a5a;
+      --border: #d8e6f3;
+      --grad: linear-gradient(135deg, #7b3fe4 0%, #2b7fff 52%, #35d0e8 100%);
+      --shadow: 0 8px 24px rgba(53, 98, 145, 0.08);
     }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(180deg, #f6f9ff 0%, #e8f0ff 100%);
-      color: var(--ink);
+      color: var(--text);
+      background:
+        radial-gradient(circle at 88% 8%, rgba(53,208,232,0.10), transparent 42%),
+        radial-gradient(circle at 12% 92%, rgba(123,63,228,0.08), transparent 40%),
+        linear-gradient(180deg, #f7fbff 0%, #e9f2fc 100%);
+      min-height: 100vh;
     }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(30,136,229,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(30,136,229,0.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      z-index: 0;
+    }
+
     .wrap {
+      position: relative;
+      z-index: 1;
       max-width: 1100px;
       margin: 0 auto;
       padding: 16px;
     }
-    .hero, .panel {
+
+    /* ===== Brand header ===== */
+    .brand-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
       background: var(--panel);
+      border: 1px solid var(--border);
       border-radius: 18px;
+      padding: 14px 20px;
+      margin-bottom: 16px;
       box-shadow: var(--shadow);
     }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+
+    .logo-mark {
+      display: grid;
+      grid-template-columns: repeat(3, 6px);
+      gap: 3px;
+      padding: 7px;
+      border-radius: 10px;
+      background: var(--grad);
+    }
+    .logo-mark i {
+      display: block;
+      width: 6px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.92);
+    }
+    .logo-mark i:nth-child(1){height:6px}.logo-mark i:nth-child(2){height:16px}.logo-mark i:nth-child(3){height:10px}
+    .logo-mark i:nth-child(4){height:14px}.logo-mark i:nth-child(5){height:8px}.logo-mark i:nth-child(6){height:18px}
+    .logo-mark i:nth-child(7){height:10px}.logo-mark i:nth-child(8){height:16px}.logo-mark i:nth-child(9){height:6px}
+
+    .brand-text b {
+      display: block;
+      font-size: 1.15rem;
+      letter-spacing: 3px;
+      color: var(--navy-deep);
+    }
+    .brand-text span {
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .steam-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .steam-tags span {
+      font-size: 0.72rem;
+      font-weight: bold;
+      color: var(--accent);
+      background: #eaf4ff;
+      border: 1px solid #cfe6fb;
+      padding: 5px 10px;
+      border-radius: 999px;
+    }
+
+    /* ===== Hero ===== */
     .hero {
+      position: relative;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
       overflow: hidden;
       margin-bottom: 16px;
     }
-    .hero img {
-      width: 100%;
-      max-height: 240px;
-      object-fit: cover;
-      display: block;
+    .hero::before {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      height: 4px;
+      background: var(--grad);
+      z-index: 2;
     }
-    .hero-text {
-      padding: 16px 18px 18px;
-    }
+    .hero-text { padding: 18px 20px 20px; }
+
     h1 {
       margin: 0 0 8px;
-      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      color: var(--navy-deep);
     }
-    .subtitle {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.45;
+    h1 .accentword {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
+    .subtitle { margin: 0; color: var(--muted); line-height: 1.5; }
+
     .grid {
       display: grid;
       grid-template-columns: 330px 1fr;
       gap: 16px;
     }
+
     .panel {
+      position: relative;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
       padding: 16px;
+      overflow: hidden;
     }
+    .panel::before {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      height: 4px;
+      background: var(--grad);
+    }
+
+    h2 { margin-top: 0; font-size: 1.08rem; color: var(--navy); }
+
     .control {
-      margin-bottom: 18px;
+      margin-bottom: 16px;
+      padding: 12px;
+      border-radius: 14px;
+      background: var(--panel-2);
+      border: 1px solid #e4eef7;
     }
     .control label {
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      font-weight: 700;
+      font-weight: bold;
       margin-bottom: 8px;
     }
+    .control label > span:last-child { color: var(--accent); }
     .control small {
       display: block;
-      margin-top: 5px;
+      margin-top: 6px;
       color: var(--muted);
-      line-height: 1.35;
+      line-height: 1.4;
     }
-    select, input[type="range"], button {
-      width: 100%;
-    }
-    select, button {
+
+    select, input[type="range"], button { width: 100%; }
+
+    select {
       padding: 10px 12px;
       border-radius: 12px;
       border: 1px solid #c8d8ef;
       font-size: 1rem;
       background: #fff;
-      color: var(--ink);
+      color: var(--text);
     }
-    input[type="range"] {
-      accent-color: var(--accent);
-    }
+    input[type="range"] { accent-color: var(--accent); }
+
     button {
       border: none;
-      font-weight: 700;
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-weight: bold;
       cursor: pointer;
       color: white;
-      background: linear-gradient(135deg, var(--accent), #59a5ff);
-      margin-top: 6px;
+      font-size: 1rem;
+      background: var(--grad);
+      box-shadow: 0 4px 12px rgba(43, 127, 255, 0.28);
+      margin-top: 8px;
+      transition: transform 0.08s ease, box-shadow 0.15s ease;
     }
-    button.secondary {
-      background: linear-gradient(135deg, #7f8fa6, #95a5a6);
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(43, 127, 255, 0.34);
     }
+    button.secondary { background: #7a8ca0; box-shadow: none; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+
     .stats {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -111,70 +235,89 @@
       margin-top: 14px;
     }
     .stat {
-      background: #f7fbff;
-      border: 1px solid #d8e6f7;
-      border-radius: 14px;
+      background: linear-gradient(180deg, #f5faff, #eef6ff);
+      border: 1px solid #dbe9f6;
+      border-radius: 12px;
       padding: 12px;
     }
-    .k {
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin-bottom: 4px;
-    }
-    .v {
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
+    .k { color: var(--muted); font-size: 0.86rem; margin-bottom: 4px; }
+    .v { font-size: 1.15rem; font-weight: bold; color: var(--navy); }
+
     .scene canvas {
       width: 100%;
       height: 420px;
       display: block;
       border-radius: 14px;
-      border: 1px solid #d8e6f7;
-      background: linear-gradient(180deg, #dff1ff 0%, #eef9ff 58%, #d1d1d1 58%, #9f9f9f 100%);
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #0f2847 0%, #16406e 40%, #cfd6dd 57%, #9aa3ad 100%);
     }
+
     .notes {
       margin-top: 12px;
       padding: 14px;
       border-radius: 14px;
-      border: 1px solid #d8e6f7;
+      border: 1px solid #dceaf6;
       background: #f7fbff;
       line-height: 1.5;
     }
     .tag {
       display: inline-block;
-      padding: 4px 10px;
+      padding: 4px 12px;
       border-radius: 999px;
       color: white;
-      font-size: 0.85rem;
-      font-weight: 700;
+      font-size: 0.82rem;
+      font-weight: bold;
       margin-bottom: 8px;
     }
     .good { background: var(--good); }
     .warn { background: var(--warn); }
     .bad { background: var(--bad); }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin: 20px 0 8px;
+    }
+
     @media (max-width: 900px) {
       .grid { grid-template-columns: 1fr; }
+      .steam-tags { display: none; }
     }
     @media (max-width: 560px) {
       .stats { grid-template-columns: 1fr; }
-      .hero img { max-height: 180px; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
+
+    <!-- Brand header -->
+    <div class="brand-bar">
+      <div class="brand">
+        <div class="logo-mark">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="brand-text">
+          <b>META DOT</b>
+          <span>RC Car STEAM Course</span>
+        </div>
+      </div>
+      <div class="steam-tags">
+        <span>Science</span><span>Technology</span><span>Engineering</span><span>Arts</span><span>Mathematics</span>
+      </div>
+    </div>
+
     <section class="hero">
-      <img src="https://zenseaichatfileupload.s3.ap-southeast-1.amazonaws.com/1b0c59ed-ee90-4a31-b611-1b66d092ae3e.jpeg" alt="Reference slide about friction between tire and ground" />
       <div class="hero-text">
-        <h1>Simple Tire Friction Car Turn Demo</h1>
-        <p class="subtitle">Choose a road surface and throttle. The car starts from rest, moves forward, and then turns left. Students can compare how friction changes the car's motion.</p>
+        <h1>🛞 Tire <span class="accentword">Friction</span> &amp; Turning</h1>
+        <p class="subtitle">Choose a road surface and throttle. The car starts from rest, moves forward, and then turns left. Compare how friction between the tires and the ground changes the car's motion.</p>
       </div>
     </section>
 
     <div class="grid">
       <section class="panel">
-        <h2>Student controls</h2>
+        <h2>Student Controls</h2>
 
         <div class="control">
           <label for="surface">Road surface <span id="surfaceLabel">Dry road</span></label>
@@ -205,7 +348,7 @@
       </section>
 
       <section class="panel scene">
-        <h2>What the car does</h2>
+        <h2>What the Car Does</h2>
         <canvas id="simCanvas" width="760" height="420"></canvas>
         <div class="notes">
           <div id="statusTag" class="tag good">READY</div>
@@ -213,6 +356,8 @@
         </div>
       </section>
     </div>
+
+    <footer>© Meta Dot Limited · RC Car STEAM Course</footer>
   </div>
 
   <script>
@@ -234,6 +379,8 @@
       };
 
       const ctx = els.canvas.getContext('2d');
+      const MAX_SPEED = 12; // cap so high grip/throttle stays realistic
+
       const state = {
         running: false,
         speed: 0,
@@ -306,15 +453,23 @@
         const h = els.canvas.height;
         ctx.clearRect(0, 0, w, h);
 
-        ctx.fillStyle = '#ffffff88';
-        ctx.beginPath();
-        ctx.arc(110, 70, 32, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(650, 95, 24, 0, Math.PI * 2);
-        ctx.fill();
+        // faint circuit grid in the sky area
+        ctx.strokeStyle = 'rgba(53,208,232,0.10)';
+        ctx.lineWidth = 1;
+        for (let gx = 0; gx < w; gx += 40) {
+          ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h * 0.57); ctx.stroke();
+        }
+        for (let gy = 0; gy < h * 0.57; gy += 40) {
+          ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke();
+        }
 
-        ctx.strokeStyle = '#666';
+        // soft glow clouds
+        ctx.fillStyle = 'rgba(255,255,255,0.10)';
+        ctx.beginPath(); ctx.arc(110, 70, 32, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(650, 95, 24, 0, Math.PI * 2); ctx.fill();
+
+        // road base
+        ctx.strokeStyle = '#5b6672';
         ctx.lineWidth = 60;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
@@ -325,7 +480,8 @@
         ctx.lineTo(510, 110);
         ctx.stroke();
 
-        ctx.strokeStyle = '#f8f8f8';
+        // center dashes
+        ctx.strokeStyle = '#f4f7fa';
         ctx.lineWidth = 4;
         ctx.setLineDash([16, 12]);
         ctx.beginPath();
@@ -336,7 +492,8 @@
         ctx.stroke();
         ctx.setLineDash([]);
 
-        ctx.strokeStyle = 'rgba(47,128,237,0.3)';
+        // cyan guide line
+        ctx.strokeStyle = 'rgba(53,208,232,0.55)';
         ctx.lineWidth = 2;
         ctx.setLineDash([8, 8]);
         ctx.beginPath();
@@ -346,9 +503,10 @@
         ctx.stroke();
         ctx.setLineDash([]);
 
-        ctx.fillStyle = '#183153';
+        // labels
+        ctx.fillStyle = '#0f2847';
         ctx.font = 'bold 18px Arial';
-        ctx.fillText('Start', 70, 280);
+        ctx.fillText('Start', 70, 285);
         ctx.fillText('Left turn', 500, 150);
       }
 
@@ -359,30 +517,35 @@
         ctx.translate(x, y);
         ctx.rotate(state.angle);
 
-        ctx.fillStyle = '#1f78d1';
+        // body
+        ctx.fillStyle = '#1f8ee8';
         ctx.beginPath();
         ctx.roundRect(-45, -20, 90, 40, 10);
         ctx.fill();
+        ctx.strokeStyle = '#e6f6ff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
 
+        // cockpit
         ctx.fillStyle = '#bfe2ff';
         ctx.fillRect(-18, -14, 36, 28);
 
-        const wheels = [
-          [-28, -24], [28, -24], [-28, 24], [28, 24]
-        ];
+        // wheels
+        const wheels = [[-28, -24], [28, -24], [-28, 24], [28, 24]];
         wheels.forEach(function (p) {
-          ctx.fillStyle = '#222';
+          ctx.fillStyle = '#20262d';
           ctx.fillRect(p[0] - 8, p[1] - 4, 16, 8);
         });
 
         ctx.restore();
 
-        ctx.fillStyle = 'rgba(24,49,83,0.9)';
-        ctx.font = 'bold 20px Arial';
+        // speed label
+        ctx.fillStyle = 'rgba(15,40,71,0.92)';
+        ctx.font = 'bold 18px Arial';
         ctx.fillText('Speed: ' + state.speed.toFixed(1) + ' m/s', x - 48, y - 52);
 
         if (state.slip) {
-          ctx.strokeStyle = '#e74c3c';
+          ctx.strokeStyle = '#ef5a5a';
           ctx.lineWidth = 3;
           for (let i = 0; i < 4; i++) {
             ctx.beginPath();
@@ -390,7 +553,7 @@
             ctx.lineTo(x - 8 + i * 12, y + 40);
             ctx.stroke();
           }
-          ctx.fillStyle = '#e74c3c';
+          ctx.fillStyle = '#ef5a5a';
           ctx.font = 'bold 24px Arial';
           ctx.fillText('SLIP!', x - 18, y - 78);
         }
@@ -412,8 +575,15 @@
         state.last = 0;
         state.turnProgress = 0;
         els.startBtn.textContent = 'Start car';
+        els.startBtn.disabled = false;
         updateOutputs();
         drawScene();
+      }
+
+      function endRun(label) {
+        state.running = false;
+        els.startBtn.textContent = label;
+        els.startBtn.disabled = false;
       }
 
       function loop(ts) {
@@ -425,7 +595,7 @@
 
         if (state.running) {
           if (state.phase !== 'finish') {
-            state.speed += v.accel * dt;
+            state.speed = Math.min(MAX_SPEED, state.speed + v.accel * dt);
           }
 
           if (state.phase === 'forward') {
@@ -475,14 +645,12 @@
             state.angle = -Math.PI / 2;
             if (state.speed <= 0.05) {
               state.speed = 0;
-              state.running = false;
-              els.startBtn.textContent = 'Start again';
+              endRun('Start again');
             }
           }
 
           if (state.slip && (state.carX > 560 || state.carY < 70 || state.carY > 390)) {
-            state.running = false;
-            els.startBtn.textContent = 'Start again';
+            endRun('Start again');
           }
         }
 
@@ -510,11 +678,13 @@
           state.phase = 'forward';
           state.slip = false;
           els.startBtn.textContent = 'Running';
+          els.startBtn.disabled = true;
         } else if (!state.running) {
           resetCar();
           state.running = true;
           state.phase = 'forward';
           els.startBtn.textContent = 'Running';
+          els.startBtn.disabled = true;
         }
       });
 
