@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simple Tire Friction Car Turn Demo</title>
+  <style>
+    :root {
+      --bg: #eef4ff;
+      --panel: rgba(255,255,255,0.94);
+      --ink: #183153;
+      --muted: #5b6b82;
+      --accent: #2f80ed;
+      --good: #27ae60;
+      --warn: #e67e22;
+      --bad: #e74c3c;
+      --shadow: 0 10px 30px rgba(24,49,83,0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #f6f9ff 0%, #e8f0ff 100%);
+      color: var(--ink);
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .hero, .panel {
+      background: var(--panel);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+    .hero {
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .hero img {
+      width: 100%;
+      max-height: 240px;
+      object-fit: cover;
+      display: block;
+    }
+    .hero-text {
+      padding: 16px 18px 18px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+    }
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 330px 1fr;
+      gap: 16px;
+    }
+    .panel {
+      padding: 16px;
+    }
+    .control {
+      margin-bottom: 18px;
+    }
+    .control label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .control small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    select, input[type="range"], button {
+      width: 100%;
+    }
+    select, button {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #c8d8ef;
+      font-size: 1rem;
+      background: #fff;
+      color: var(--ink);
+    }
+    input[type="range"] {
+      accent-color: var(--accent);
+    }
+    button {
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), #59a5ff);
+      margin-top: 6px;
+    }
+    button.secondary {
+      background: linear-gradient(135deg, #7f8fa6, #95a5a6);
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .stat {
+      background: #f7fbff;
+      border: 1px solid #d8e6f7;
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .k {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+    .v {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    .scene canvas {
+      width: 100%;
+      height: 420px;
+      display: block;
+      border-radius: 14px;
+      border: 1px solid #d8e6f7;
+      background: linear-gradient(180deg, #dff1ff 0%, #eef9ff 58%, #d1d1d1 58%, #9f9f9f 100%);
+    }
+    .notes {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid #d8e6f7;
+      background: #f7fbff;
+      line-height: 1.5;
+    }
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .good { background: var(--good); }
+    .warn { background: var(--warn); }
+    .bad { background: var(--bad); }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .stats { grid-template-columns: 1fr; }
+      .hero img { max-height: 180px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <img src="https://zenseaichatfileupload.s3.ap-southeast-1.amazonaws.com/1b0c59ed-ee90-4a31-b611-1b66d092ae3e.jpeg" alt="Reference slide about friction between tire and ground" />
+      <div class="hero-text">
+        <h1>Simple Tire Friction Car Turn Demo</h1>
+        <p class="subtitle">Choose a road surface and throttle. The car starts from rest, moves forward, and then turns left. Students can compare how friction changes the car's motion.</p>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="panel">
+        <h2>Student controls</h2>
+
+        <div class="control">
+          <label for="surface">Road surface <span id="surfaceLabel">Dry road</span></label>
+          <select id="surface">
+            <option value="0.25">Snow</option>
+            <option value="0.5">Wet road</option>
+            <option value="0.85" selected>Dry road</option>
+            <option value="0.1">Ice road</option>
+          </select>
+          <small>Lower friction means less grip between the tires and the ground.</small>
+        </div>
+
+        <div class="control">
+          <label for="throttle">Throttle <span id="throttleLabel">40%</span></label>
+          <input id="throttle" type="range" min="0" max="100" step="1" value="40" />
+          <small>More throttle asks the tires to provide more forward force.</small>
+        </div>
+
+        <button id="startBtn">Start car</button>
+        <button id="resetBtn" class="secondary">Reset</button>
+
+        <div class="stats">
+          <div class="stat"><div class="k">Friction coefficient</div><div class="v" id="muOut">0.85</div></div>
+          <div class="stat"><div class="k">Grip level</div><div class="v" id="gripOut">High</div></div>
+          <div class="stat"><div class="k">Speed</div><div class="v" id="speedOut">0.0 m/s</div></div>
+          <div class="stat"><div class="k">Turn result</div><div class="v" id="turnOut">Ready</div></div>
+        </div>
+      </section>
+
+      <section class="panel scene">
+        <h2>What the car does</h2>
+        <canvas id="simCanvas" width="760" height="420"></canvas>
+        <div class="notes">
+          <div id="statusTag" class="tag good">READY</div>
+          <div id="statusText">The car is stopped at the beginning. Choose the road surface and throttle, then start the car.</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const els = {
+        surface: document.getElementById('surface'),
+        surfaceLabel: document.getElementById('surfaceLabel'),
+        throttle: document.getElementById('throttle'),
+        throttleLabel: document.getElementById('throttleLabel'),
+        startBtn: document.getElementById('startBtn'),
+        resetBtn: document.getElementById('resetBtn'),
+        muOut: document.getElementById('muOut'),
+        gripOut: document.getElementById('gripOut'),
+        speedOut: document.getElementById('speedOut'),
+        turnOut: document.getElementById('turnOut'),
+        statusTag: document.getElementById('statusTag'),
+        statusText: document.getElementById('statusText'),
+        canvas: document.getElementById('simCanvas')
+      };
+
+      const ctx = els.canvas.getContext('2d');
+      const state = {
+        running: false,
+        speed: 0,
+        carX: 100,
+        carY: 325,
+        angle: 0,
+        phase: 'stopped',
+        slip: false,
+        last: 0,
+        turnProgress: 0
+      };
+
+      function getValues() {
+        const mu = parseFloat(els.surface.value);
+        const throttle = parseFloat(els.throttle.value);
+        const power = throttle / 100;
+        const accel = power * mu * 3.2;
+        const turnGripNeed = 0.38 + power * 0.3;
+        const slip = mu < turnGripNeed;
+        return { mu, throttle, power, accel, slip };
+      }
+
+      function updateLabels() {
+        els.surfaceLabel.textContent = els.surface.options[els.surface.selectedIndex].text;
+        els.throttleLabel.textContent = els.throttle.value + '%';
+      }
+
+      function gripText(mu) {
+        if (mu >= 0.75) return 'High';
+        if (mu >= 0.4) return 'Medium';
+        return 'Low';
+      }
+
+      function updateOutputs() {
+        const v = getValues();
+        els.muOut.textContent = v.mu.toFixed(2);
+        els.gripOut.textContent = gripText(v.mu);
+        els.speedOut.textContent = state.speed.toFixed(1) + ' m/s';
+
+        if (state.phase === 'stopped') {
+          els.turnOut.textContent = 'Ready';
+          els.statusTag.className = 'tag good';
+          els.statusTag.textContent = 'READY';
+          els.statusText.textContent = 'The car is stopped at the beginning. Choose the road surface and throttle, then start the car.';
+        } else if (state.phase === 'forward') {
+          els.turnOut.textContent = 'Going straight';
+          els.statusTag.className = 'tag good';
+          els.statusTag.textContent = 'MOVING';
+          els.statusText.textContent = 'The car is moving forward. More friction gives better grip, so the car speeds up more easily.';
+        } else if (state.phase === 'turning' && !state.slip) {
+          els.turnOut.textContent = 'Turns left safely';
+          els.statusTag.className = 'tag good';
+          els.statusTag.textContent = 'GOOD GRIP';
+          els.statusText.textContent = 'The tires have enough friction with the road, so the car can turn left successfully.';
+        } else if (state.phase === 'turning' && state.slip) {
+          els.turnOut.textContent = 'Slides outward';
+          els.statusTag.className = 'tag bad';
+          els.statusTag.textContent = 'SLIPPING';
+          els.statusText.textContent = 'There is not enough friction for this throttle and road surface, so the car cannot turn left properly and slides.';
+        } else if (state.phase === 'finish') {
+          els.turnOut.textContent = 'Reached the end';
+          els.statusTag.className = 'tag good';
+          els.statusTag.textContent = 'STOPPED';
+          els.statusText.textContent = 'With good grip, the car followed the road to the end and then stopped safely.';
+        }
+      }
+
+      function drawRoad() {
+        const w = els.canvas.width;
+        const h = els.canvas.height;
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.fillStyle = '#ffffff88';
+        ctx.beginPath();
+        ctx.arc(110, 70, 32, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(650, 95, 24, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#666';
+        ctx.lineWidth = 60;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(80, 325);
+        ctx.lineTo(430, 325);
+        ctx.arc(430, 245, 80, Math.PI / 2, 0, true);
+        ctx.lineTo(510, 110);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#f8f8f8';
+        ctx.lineWidth = 4;
+        ctx.setLineDash([16, 12]);
+        ctx.beginPath();
+        ctx.moveTo(80, 325);
+        ctx.lineTo(430, 325);
+        ctx.arc(430, 245, 80, Math.PI / 2, 0, true);
+        ctx.lineTo(510, 110);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.strokeStyle = 'rgba(47,128,237,0.3)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([8, 8]);
+        ctx.beginPath();
+        ctx.moveTo(100, 325);
+        ctx.lineTo(430, 325);
+        ctx.arc(430, 245, 80, Math.PI / 2, 0, true);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = '#183153';
+        ctx.font = 'bold 18px Arial';
+        ctx.fillText('Start', 70, 280);
+        ctx.fillText('Left turn', 500, 150);
+      }
+
+      function drawCar() {
+        const x = state.carX;
+        const y = state.carY;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(state.angle);
+
+        ctx.fillStyle = '#1f78d1';
+        ctx.beginPath();
+        ctx.roundRect(-45, -20, 90, 40, 10);
+        ctx.fill();
+
+        ctx.fillStyle = '#bfe2ff';
+        ctx.fillRect(-18, -14, 36, 28);
+
+        const wheels = [
+          [-28, -24], [28, -24], [-28, 24], [28, 24]
+        ];
+        wheels.forEach(function (p) {
+          ctx.fillStyle = '#222';
+          ctx.fillRect(p[0] - 8, p[1] - 4, 16, 8);
+        });
+
+        ctx.restore();
+
+        ctx.fillStyle = 'rgba(24,49,83,0.9)';
+        ctx.font = 'bold 20px Arial';
+        ctx.fillText('Speed: ' + state.speed.toFixed(1) + ' m/s', x - 48, y - 52);
+
+        if (state.slip) {
+          ctx.strokeStyle = '#e74c3c';
+          ctx.lineWidth = 3;
+          for (let i = 0; i < 4; i++) {
+            ctx.beginPath();
+            ctx.moveTo(x - 18 + i * 12, y + 28);
+            ctx.lineTo(x - 8 + i * 12, y + 40);
+            ctx.stroke();
+          }
+          ctx.fillStyle = '#e74c3c';
+          ctx.font = 'bold 24px Arial';
+          ctx.fillText('SLIP!', x - 18, y - 78);
+        }
+      }
+
+      function drawScene() {
+        drawRoad();
+        drawCar();
+      }
+
+      function resetCar() {
+        state.running = false;
+        state.speed = 0;
+        state.carX = 100;
+        state.carY = 325;
+        state.angle = 0;
+        state.phase = 'stopped';
+        state.slip = false;
+        state.last = 0;
+        state.turnProgress = 0;
+        els.startBtn.textContent = 'Start car';
+        updateOutputs();
+        drawScene();
+      }
+
+      function loop(ts) {
+        if (!state.last) state.last = ts;
+        const dt = Math.min(0.04, (ts - state.last) / 1000);
+        state.last = ts;
+
+        const v = getValues();
+
+        if (state.running) {
+          if (state.phase !== 'finish') {
+            state.speed += v.accel * dt;
+          }
+
+          if (state.phase === 'forward') {
+            state.carX += state.speed * 8 * dt;
+            state.carY = 325;
+            state.angle = 0;
+            if (state.carX >= 430) {
+              state.carX = 430;
+              state.phase = 'turning';
+              state.slip = v.slip;
+              state.turnProgress = 0;
+            }
+          } else if (state.phase === 'turning') {
+            if (!state.slip) {
+              const arcRadius = 80;
+              const arcLength = arcRadius * (Math.PI / 2);
+              const endX = 510;
+              const endY = 110;
+              state.turnProgress += (state.speed * 8 * dt) / arcLength;
+
+              if (state.turnProgress >= 1) {
+                state.turnProgress = 1;
+                state.carX = endX;
+                state.carY = endY;
+                state.angle = -Math.PI / 2;
+                state.phase = 'finish';
+              } else {
+                const theta = (Math.PI / 2) * state.turnProgress;
+                state.carX = 430 + arcRadius * Math.sin(theta);
+                state.carY = 245 + arcRadius * Math.cos(theta);
+                state.angle = -theta;
+              }
+            } else {
+              state.turnProgress += (state.speed * 8 * dt) / 170;
+              const limitedTurn = Math.min(state.turnProgress, Math.PI / 5);
+              const baseX = 430 + 80 * Math.sin(limitedTurn);
+              const baseY = 245 + 80 * Math.cos(limitedTurn);
+              const slipDrift = Math.max(0, state.turnProgress - limitedTurn) * 95;
+              state.carX = baseX + slipDrift;
+              state.carY = baseY - slipDrift * 0.18;
+              state.angle = -limitedTurn * 0.6;
+            }
+          } else if (state.phase === 'finish') {
+            state.speed = Math.max(0, state.speed - 5 * dt);
+            state.carX = 510;
+            state.carY = 110;
+            state.angle = -Math.PI / 2;
+            if (state.speed <= 0.05) {
+              state.speed = 0;
+              state.running = false;
+              els.startBtn.textContent = 'Start again';
+            }
+          }
+
+          if (state.slip && (state.carX > 560 || state.carY < 70 || state.carY > 390)) {
+            state.running = false;
+            els.startBtn.textContent = 'Start again';
+          }
+        }
+
+        updateOutputs();
+        drawScene();
+        requestAnimationFrame(loop);
+      }
+
+      [els.surface, els.throttle].forEach(function (el) {
+        el.addEventListener('input', function () {
+          updateLabels();
+          updateOutputs();
+          drawScene();
+        });
+        el.addEventListener('change', function () {
+          updateLabels();
+          updateOutputs();
+          drawScene();
+        });
+      });
+
+      els.startBtn.addEventListener('click', function () {
+        if (state.phase === 'stopped') {
+          state.running = true;
+          state.phase = 'forward';
+          state.slip = false;
+          els.startBtn.textContent = 'Running';
+        } else if (!state.running) {
+          resetCar();
+          state.running = true;
+          state.phase = 'forward';
+          els.startBtn.textContent = 'Running';
+        }
+      });
+
+      els.resetBtn.addEventListener('click', resetCar);
+
+      updateLabels();
+      updateOutputs();
+      drawScene();
+      requestAnimationFrame(loop);
+    });
+  </script>
+</body>
+</html>
