@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SKY02 · Lesson 1 - Part 1</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: #f5f5f2;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    /* 頂部標題列 */
+    header {
+      background: linear-gradient(135deg, #1a4a7a, #2871a5);
+      color: white;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    header .logo {
+      font-weight: bold;
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+    }
+
+    header h1 { font-size: 1.5rem; }
+
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .section-tag {
+      display: inline-block;
+      background: #111;
+      color: white;
+      padding: 8px 24px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+
+    .card h2 {
+      font-size: 1.2rem;
+      color: #1a4a7a;
+      margin-bottom: 15px;
+      border-left: 5px solid #2871a5;
+      padding-left: 12px;
+    }
+
+    /* 響應式 16:9 嵌入框（Canva 投影片 & 影片共用） */
+    .embed-frame {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;   /* 16:9 比例 */
+      border-radius: 8px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .embed-frame iframe,
+    .embed-frame video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* 開始遊戲按鈕 */
+    .btn-row {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .btn-start {
+      display: inline-block;
+      padding: 16px 50px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff8c00, #ff5722);
+      color: white;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(255,87,34,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-start:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 22px rgba(255,87,34,0.5);
+    }
+
+    .btn-start:active { transform: translateY(0); }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">◆ SKY 02</div>
+    <h1>Lesson 1 · Part 1</h1>
+  </header>
+
+  <div class="container">
+
+    <!-- ===== 投影片區 ===== -->
+    <div class="section-tag">📖 課程投影片</div>
+    <div class="card">
+      <h2>Presentation</h2>
+      <div class="embed-frame">
+        <!-- Canva 嵌入：在 /view 後面加上 ?embed 才能正確內嵌 -->
+        <iframe
+          src="https://www.canva.com/design/DAHOsJ3cnIw/JsedCiSyG1xexfbDy5eP6A/view?embed"
+          allowfullscreen="allowfullscreen"
+          allow="fullscreen"
+          loading="lazy">
+        </iframe>
+      </div>
+    </div>
+
+    <!-- ===== 影片區 ===== -->
+    <div class="section-tag">🎬 教學影片</div>
+    <div class="card">
+      <h2>Video</h2>
+      <div class="embed-frame">
+        <!-- 本機影片：請把 src 換成你的影片檔路徑 -->
+        <video controls preload="metadata">
+          <source src="videos/L1P1.mp4" type="video/mp4">
+          你的瀏覽器不支援影片播放。
+        </video>
+
+        <!--
+          若要改用 YouTube，請把上面整個 <video>...</video> 換成：
+          <iframe
+            src="https://www.youtube.com/embed/影片ID"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        -->
+      </div>
+    </div>
+
+    <!-- ===== 開始遊戲按鈕 ===== -->
+    <div class="btn-row">
+      <a href="Game_L1G1.html" class="btn-start">🎮 Start Game</a>
+    </div>
+
+  </div>
+
+</body>
+</html>
